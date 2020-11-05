@@ -24,7 +24,6 @@ import { QueryMethods } from './query';
 import { fromEntries } from '../utils/fromEntries';
 import { removeNodeFromEvents } from '../utils/removeNodeFromEvents';
 import invariant from 'tiny-invariant';
-import { editorInitialState } from './store';
 
 const Methods = (
   state: EditorState,
@@ -96,10 +95,6 @@ const Methods = (
   };
 
   const deleteNode = (id: NodeId, isLinkedNode: boolean = false) => {
-    if (!isLinkedNode) {
-      invariant(!query.node(id).isTopLevelNode(), ERROR_DELETE_TOP_LEVEL_NODE);
-    }
-
     const targetNode = state.nodes[id],
       parentNode = state.nodes[targetNode.data.parent];
 
