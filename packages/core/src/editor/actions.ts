@@ -18,6 +18,7 @@ import {
   ERROR_NOPARENT,
   ERROR_DELETE_TOP_LEVEL_NODE,
   CallbacksFor,
+  Delete,
 } from '@craftjs/utils';
 import { QueryMethods } from './query';
 import { fromEntries } from '../utils/fromEntries';
@@ -362,10 +363,18 @@ export const ActionMethods = (
 ) => {
   return {
     ...Methods(state, query),
+    // Note: Beware: advanced method! You most likely don't need to use this
+    // TODO: fix parameter types and cleanup the method
     setState(
-      cb: (state: EditorState, actions: CallbacksFor<typeof Methods>) => void
+      cb: (
+        state: EditorState,
+        actions: Delete<CallbacksFor<typeof Methods>, 'history'>
+      ) => void
     ) {
-      cb(state, this);
+      const { history, ...actions } = this;
+
+      // We pass the other actions as the second parameter, so that devs could still make use of the predefined actions
+      cb(state, actions);
     },
   };
 };
